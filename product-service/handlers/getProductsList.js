@@ -1,17 +1,9 @@
-const products = require('../mockProducts.json');
+const fetchProducts = require('../fetchProducts');
 
-function fetchProducts(products) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(products);
-    }, 500);
-  });
-}
-
-async function getProducts() {
+const getProducts = async () => {
   try {
-    const response = await fetchProducts(products);
-    return response;
+    const products = await fetchProducts();
+    return products;
   } catch(error) {
     return error;
   }
@@ -20,7 +12,7 @@ async function getProducts() {
 module.exports.getProductsList = async (event) => {
   const products = await getProducts();
 
-  if (!products || !products.length) {
+  if (!products) {
     return {
       statusCode: 404,
       body: JSON.stringify('Products not found!'),
@@ -32,7 +24,7 @@ module.exports.getProductsList = async (event) => {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "OPTIONS,GET"
   };
-  
+
   return {
     statusCode: 200,
     headers,

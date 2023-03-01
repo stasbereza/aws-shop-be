@@ -1,18 +1,11 @@
-const products = require('../mockProducts.json');
+const fetchProducts = require('../fetchProducts');
 
-function findProductById(productId) {
-  return new Promise((resolve) => {
-    const product = products.find(product => product.id === productId);
-    setTimeout(() => {
-      resolve(product);
-    }, 500);
-  });
-}
-
-async function getProduct(productId) {
+const findProductById = async (productId) => {
   try {
-    const response = await findProductById(productId);
-    return response;
+    const products = await fetchProducts();
+    const product = products.find(product => product.id === productId);
+
+    return product;
   } catch(error) {
     return error;
   }
@@ -21,7 +14,7 @@ async function getProduct(productId) {
 module.exports.getProductById = async (event) => {
   const { productId } = event.pathParameters;
 
-  const foundProduct = await getProduct(productId);
+  const foundProduct = await findProductById(productId);
 
   if (!foundProduct) {
     return {
