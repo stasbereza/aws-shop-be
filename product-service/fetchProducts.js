@@ -1,11 +1,9 @@
-const products = require('./mockProducts.json');
+import { products } from './mockData.js';
 
-const fetchProducts = () => {
+export const fetchProducts = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(products);
     }, 500);
   });
 }
-
-module.exports = fetchProducts;

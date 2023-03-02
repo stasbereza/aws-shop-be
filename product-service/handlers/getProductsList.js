@@ -1,4 +1,4 @@
-const fetchProducts = require('../fetchProducts');
+import { fetchProducts } from '../fetchProducts.js';
 
 const getProducts = async () => {
   try {
@@ -9,7 +9,7 @@ const getProducts = async () => {
   }
 }
 
-module.exports.getProductsList = async (event) => {
+export const getProductsList = async (event) => {
   const products = await getProducts();
 
   if (!products) {
@@ -30,5 +30,5 @@ module.exports.getProductsList = async (event) => {
     headers,
     body: JSON.stringify(products),
   };
-};
+}
 

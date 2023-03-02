@@ -1,4 +1,4 @@
-const fetchProducts = require('../fetchProducts');
+import { fetchProducts } from '../fetchProducts.js';
 
 const findProductById = async (productId) => {
   try {
@@ -11,7 +11,7 @@ const findProductById = async (productId) => {
   }
 }
 
-module.exports.getProductById = async (event) => {
+export const getProductById = async (event) => {
   const { productId } = event.pathParameters;
 
   const foundProduct = await findProductById(productId);
@@ -31,4 +31,4 @@ module.exports.getProductById = async (event) => {
     statusCode: 200,
     body: JSON.stringify(product),
   };
-};
+}
