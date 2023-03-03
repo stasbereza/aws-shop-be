@@ -1,34 +1,34 @@
 import { fetchProducts } from '../fetchProducts.js';
 
 const findProductById = async (productId) => {
-  try {
-    const products = await fetchProducts();
-    const product = products.find(product => product.id === productId);
+  const products = await fetchProducts();
+  const product = products.find(product => product.id === productId);
 
-    return product;
-  } catch(error) {
-    return error;
+  if (!product) {
+    throw new Error('Product not found!');
   }
+
+  return product;
 }
 
 export const getProductById = async (event) => {
   const { productId } = event.pathParameters;
 
-  const foundProduct = await findProductById(productId);
+  try {
+    const foundProduct = await findProductById(productId);
 
-  if (!foundProduct) {
+    const product = {
+      [productId]: foundProduct,
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(product),
+    };
+  } catch (error) {
     return {
       statusCode: 404,
-      body: JSON.stringify('Product not found!'),
+      body: JSON.stringify(error.message),
     }
   }
-
-  const product = {
-    [productId]: foundProduct,
-  }
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify(product),
-  };
 }

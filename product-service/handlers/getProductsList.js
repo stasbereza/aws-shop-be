@@ -1,34 +1,28 @@
 import { fetchProducts } from '../fetchProducts.js';
 
 const getProducts = async () => {
-  try {
-    const products = await fetchProducts();
-    return products;
-  } catch(error) {
-    return error;
+  const products = await fetchProducts();
+
+  if (!products) {
+    throw new Error('Products not found!');
   }
+
+  return products;
 }
 
 export const getProductsList = async (event) => {
-  const products = await getProducts();
+  try {
+    const products = await getProducts();
 
-  if (!products) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(products),
+    };
+  } catch(error) {
     return {
       statusCode: 404,
-      body: JSON.stringify('Products not found!'),
+      body: JSON.stringify(error.message),
     }
   }
-
-  const headers = {
-    "Access-Control-Allow-Headers" : "Content-Type",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "OPTIONS,GET"
-  };
-
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify(products),
-  };
 }
 
