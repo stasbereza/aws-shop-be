@@ -1,4 +1,5 @@
 import { parseFile } from '../parseFile.js';
+import { copyFile } from '../copyFile.js';
 
 export const importFileParser = async (event) => {
   const filePath = event.Records[0].s3.object.key;
@@ -10,6 +11,7 @@ export const importFileParser = async (event) => {
 
   try {
     await parseFile(params);
+    await copyFile(filePath);
   
     return {
       statusCode: 200,
