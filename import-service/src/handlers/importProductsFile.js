@@ -1,4 +1,4 @@
-import { s3 } from '../awsS3.js';
+import { s3 } from '../aws.js';
 
 export const importProductsFile = async (event) => {
   const { name } = event.queryStringParameters;
@@ -12,7 +12,7 @@ export const importProductsFile = async (event) => {
 
   const filePath = `uploaded/${name}`;
   const params = {
-    Bucket: process.env.BucketName,
+    Bucket: process.env.BUCKET_NAME,
     Key: filePath,
     ContentType: 'text/csv'
   }

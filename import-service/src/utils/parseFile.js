@@ -1,5 +1,5 @@
 import csv from 'csv-parser';
-import { s3 } from './awsS3.js';
+import { s3 } from '../aws.js';
 
 export const parseFile = (params) => {
   return new Promise((resolve, reject) => {
@@ -7,17 +7,14 @@ export const parseFile = (params) => {
     const results = [];
 
     s3Stream
-      .pipe(csv())
+      .pipe(csv({ separator: ';' }))
       .on('data', (data) => {
-        console.log('data: ', data);
         results.push(data);
       })
       .on('error', (error) => {
-        console.log('error: ', error);
-        reject(error)
+        reject(error);
       })
       .on('end', () => {
-      console.log('end: ', results);
       resolve(results);
     })
   });

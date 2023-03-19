@@ -1,14 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import { docClient } from '../awsDocClient.js';
-
-const putItem = async (params) => {
-  console.log('putItem params: ', params);
-  await docClient.put(params).promise();
-};
+import { putItem } from '../utils/DynamoDB.js';
 
 export const createProduct = async (event) => {
   const params = {
-    TableName: process.env.ProductsTableName,
+    TableName: process.env.PRODUCTS_TABLE,
     Item: {
       'id': uuidv4(),
       'title': 'newItem'
@@ -17,9 +12,14 @@ export const createProduct = async (event) => {
 
   try {
     await putItem(params);
-  
+    
     return {
       statusCode: 201,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Methods": "POST, PUT, OPTIONS",
+      },
       body: JSON.stringify('Product successfully created!'),
     };
   } catch(error) {
