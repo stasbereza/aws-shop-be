@@ -1,6 +1,22 @@
-import { sqs } from '../aws.js';
-import { parseFile } from '../utils/parseFile.js';
-import { copyFile } from '../utils/copyFile.js';
+import { sqs } from "../aws.js";
+import { parseFile } from "../utils/parseFile.js";
+import { copyFile } from "../utils/copyFile.js";
+
+const sendMessages = async (chunks) => {
+  chunks.forEach(async (chunk) => {
+    await sqs
+      .sendMessage(
+        {
+          QueueUrl: process.env.SQS_URL,
+          MessageBody: JSON.stringify(chunk),
+        },
+        () => {
+          console.log("Sent message for chunk: ", chunk);
+        }
+      )
+      .promise();
+  });
+};
 
 export const importFileParser = async (event, context, callback) => {
   const filePath = event.Records[0].s3.object.key;
@@ -11,25 +27,17 @@ export const importFileParser = async (event, context, callback) => {
   };
 
   try {
-    const results = await parseFile(params);
+    const parsedFile = await parseFile(params);
     await copyFile(filePath);
+    await sendMessages(parsedFile);
 
-    results.forEach(chunk => {
-      sqs.sendMessage({
-        QueueUrl: process.env.SQS_URL,
-        MessageBody: JSON.stringify(chunk),
-      }, () => {
-        console.log('Sent message for chunk: ', chunk);
-      })
-    })
-  
     callback(null, {
       statusCode: 200,
-    })
-  } catch(error) {
+    });
+  } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify(error.message),
-    }
+    };
   }
-}
+};

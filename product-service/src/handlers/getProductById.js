@@ -1,4 +1,4 @@
-import { queryItem } from '../utils/DynamoDB.js';
+import { queryItem } from "../utils/DynamoDB.js";
 
 export const getProductById = async (event) => {
   const { productId } = event.pathParameters;
@@ -14,6 +14,6 @@ export const getProductById = async (event) => {
     return {
       statusCode: 404,
       body: JSON.stringify(error.message),
-    }
+    };
   }
-}
+};

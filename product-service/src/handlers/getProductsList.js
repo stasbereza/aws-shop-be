@@ -1,12 +1,14 @@
-import { scanTable } from '../utils/DynamoDB.js';
+import { scanTable } from "../utils/DynamoDB.js";
 
 export const getProductsList = async (event) => {
   try {
-    const products = await scanTable(process.env.PRODUCTS_TABLE, 'Products');
-    const stock = await scanTable(process.env.StockTableName, 'Stock');
+    const products = await scanTable(process.env.PRODUCTS_TABLE, "Products");
+    const stock = await scanTable(process.env.StockTableName, "Stock");
 
-    const joinedProducts = products.map(product => {
-      const productOnStock = stock.find((item) => item.product_id === product.id);
+    const joinedProducts = products.map((product) => {
+      const productOnStock = stock.find(
+        (item) => item.product_id === product.id
+      );
 
       if (!productOnStock) return product;
 
@@ -16,11 +18,11 @@ export const getProductsList = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify(joinedProducts),
-    }
-  } catch(error) {
+    };
+  } catch (error) {
     return {
       statusCode: 404,
       body: JSON.stringify(error.message),
-    }
+    };
   }
-}
+};
