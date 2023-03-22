@@ -5,8 +5,8 @@ export const getProductsList = async (event) => {
     const products = await scanTable(process.env.PRODUCTS_TABLE, "Products");
     const stock = await scanTable(process.env.StockTableName, "Stock");
 
-    const joinedProducts = products.map((product) => {
-      const productOnStock = stock.find(
+    const joinedProducts = products?.map((product) => {
+      const productOnStock = stock?.find(
         (item) => item.product_id === product.id
       );
 
@@ -21,7 +21,7 @@ export const getProductsList = async (event) => {
     };
   } catch (error) {
     return {
-      statusCode: 404,
+      statusCode: 500,
       body: JSON.stringify(error.message),
     };
   }

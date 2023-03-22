@@ -15,18 +15,12 @@ export const createProduct = async (event) => {
 
     return {
       statusCode: 201,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Credentials": true,
-        "Access-Control-Allow-Methods": "POST, PUT, OPTIONS",
-      },
       body: JSON.stringify("Product successfully created!"),
     };
   } catch (error) {
     return {
-      statusCode: 400,
-      body: JSON.stringify("Invalid params. Product not created!"),
+      statusCode: 500,
+      body: JSON.stringify(error.message),
     };
   }
 };
