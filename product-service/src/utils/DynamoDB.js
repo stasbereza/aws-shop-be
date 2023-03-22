@@ -39,14 +39,3 @@ export const scanTable = async (tableName, entity) => {
 
   return scanResults.Items;
 };
-
-export const putItemsIntoDynamoDB = async (items, tableName) => {
-  items.forEach(async (item) => {
-    const params = {
-      TableName: tableName,
-      Item: item,
-    };
-
-    await putItem(params);
-  });
-};

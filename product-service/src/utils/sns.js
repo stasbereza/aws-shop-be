@@ -2,12 +2,15 @@ import AWS from "aws-sdk";
 
 const sns = new AWS.SNS({ region: process.env.REGION });
 
-export const sendNotifications = async (products) => {
+export const sendNotification = async (product) => {
   await sns
     .publish(
       {
-        Subject: "Products created!",
-        Message: JSON.stringify(products),
+        Subject: "Product creation notification",
+        Message: `Product ${product.title} is created successfully!`,
+        MessageAttributes: {
+          price: { DataType: "Number", StringValue: product.price },
+        },
         TopicArn: process.env.SNS_ARN,
       },
       () => {

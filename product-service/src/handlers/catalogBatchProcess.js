@@ -1,5 +1,5 @@
-import { putItemsIntoDynamoDB } from "../utils/DynamoDB.js";
-import { sendNotifications } from "../utils/sns.js";
+import { putItem } from "../utils/DynamoDB.js";
+import { sendNotification } from "../utils/sns.js";
 
 export const catalogBatchProcess = async (event) => {
   const products = event.Records.map(({ body }) => JSON.parse(body));
@@ -9,8 +9,15 @@ export const catalogBatchProcess = async (event) => {
   }
 
   try {
-    await putItemsIntoDynamoDB(products, process.env.PRODUCTS_TABLE);
-    await sendNotifications(products);
+    for (const product of products) {
+      const params = {
+        TableName: process.env.PRODUCTS_TABLE,
+        Item: product,
+      };
+
+      await putItem(params);
+      await sendNotification(product);
+    }
 
     return {
       statusCode: 200,

@@ -48,6 +48,18 @@ resources:
         Protocol: email
         TopicArn:
           Ref: SNSTopic
+    SNSSubscriptionWithFilter:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: ${env:SNS_FILTER_ENDPOINT}
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic
+        FilterPolicy:
+          price:
+            - numeric:
+                - ">="
+                - 2000
 
 functions:
   getProductsList:
