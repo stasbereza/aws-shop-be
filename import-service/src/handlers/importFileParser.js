@@ -1,22 +1,6 @@
-import { sqs } from "../aws.js";
 import { parseFile } from "../utils/parseFile.js";
 import { copyFile } from "../utils/copyFile.js";
-
-const sendMessages = async (chunks) => {
-  chunks.forEach(async (chunk) => {
-    await sqs
-      .sendMessage(
-        {
-          QueueUrl: process.env.SQS_URL,
-          MessageBody: JSON.stringify(chunk),
-        },
-        () => {
-          console.log("Sent message for chunk: ", chunk);
-        }
-      )
-      .promise();
-  });
-};
+import { sendMessages } from "../utils/sendMessages.js";
 
 export const importFileParser = async (event, context, callback) => {
   const filePath = event.Records[0].s3.object.key;
