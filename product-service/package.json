@@ -1,8 +1,8 @@
 {
   "name": "product-service",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/utils/DynamoDB.js",
+  "description": "Store app product-service",
+  "main": "src/utils/dynamoDB.js",
   "type": "module",
   "scripts": {
     "deploy": "sls deploy"
@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1328.0",
+    "joi": "^17.9.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

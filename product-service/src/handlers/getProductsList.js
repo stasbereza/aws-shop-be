@@ -1,4 +1,4 @@
-import { scanTable } from "../utils/DynamoDB.js";
+import { scanTable } from "../utils/dynamoDB.js";
 
 export const getProductsList = async (event) => {
   try {

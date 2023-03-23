@@ -1,11 +1,11 @@
-import { putItem } from "../utils/DynamoDB.js";
+import { putItem } from "../utils/dynamoDB.js";
 import { sendNotification } from "../utils/sns.js";
 
 export const catalogBatchProcess = async (event) => {
   const products = event.Records.map(({ body }) => JSON.parse(body));
 
   if (!products || !products?.length) {
-    throw new Error("No records!");
+    throw new Error("No records found!");
   }
 
   try {

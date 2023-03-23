@@ -1,12 +1,21 @@
 import { v4 as uuidv4 } from "uuid";
-import { putItem } from "../utils/DynamoDB.js";
+import { putItem } from "../utils/dynamoDB.js";
+import { productValidator } from "../validators/productValidator.js";
 
 export const createProduct = async (event) => {
+  const parsedBody = JSON.parse(event.body);
+  const validatedProduct = productValidator(parsedBody);
+
+  if (!validatedProduct.valid) {
+    throw new Error("Product schema is not valid!");
+  }
+
+  const product = validatedProduct.body;
   const params = {
     TableName: process.env.PRODUCTS_TABLE,
     Item: {
       id: uuidv4(),
-      title: "newItem",
+      ...product,
     },
   };
 
@@ -15,7 +24,7 @@ export const createProduct = async (event) => {
 
     return {
       statusCode: 201,
-      body: JSON.stringify("Product successfully created!"),
+      body: JSON.stringify(`Product ${product.title} successfully created!`),
     };
   } catch (error) {
     return {

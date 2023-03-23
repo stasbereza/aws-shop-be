@@ -19,7 +19,7 @@ export const queryItem = async (id) => {
     })
     .promise();
 
-  if (!queryResults.Items || queryResults.Items?.length === 0) {
+  if (!queryResults.Items || !queryResults.Items?.length) {
     throw new Error("Product not found!");
   }
 
@@ -33,7 +33,7 @@ export const scanTable = async (tableName, entity) => {
     })
     .promise();
 
-  if (!scanResults.Items || scanResults.Items?.length === 0) {
+  if (!scanResults.Items || !scanResults.Items?.length) {
     throw new Error(`${entity} not found!`);
   }
 

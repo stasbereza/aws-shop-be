@@ -1,4 +1,4 @@
-import { queryItem } from "../utils/DynamoDB.js";
+import { queryItem } from "../utils/dynamoDB.js";
 
 export const getProductById = async (event) => {
   const { productId } = event.pathParameters;
