@@ -1,5 +1,5 @@
 service: import-service
-frameworkVersion: '3'
+frameworkVersion: "3"
 useDotenv: true
 
 provider:
@@ -11,42 +11,39 @@ provider:
     cors: true
   environment:
     REGION: ${self:provider.region}
+    BUCKET_NAME: ${env:BUCKET_NAME}
+    QUEUE_NAME: ${env:QUEUE_NAME}
+    SQS_URL: ${env:SQS_URL}
   iam:
     role:
       statements:
         - Effect: Allow
           Action:
-            - 's3:ListBucket'
-          Resource: 'arn:aws:s3:::${env:BUCKET}'
+            - "s3:ListBucket"
+          Resource: "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}"
         - Effect: Allow
           Action:
-            - 's3:*'
+            - "s3:*"
           Resource:
-            - 'arn:aws:s3:::${env:BUCKET}/*'
+            - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
+        - Effect: Allow
+          Action: "sqs:*"
+          Resource: "arn:aws:sqs:eu-west-1:425140362966:${self:provider.environment.QUEUE_NAME}"
 
 functions:
   importProductsFile:
-    handler: handlers/importProductsFile.importProductsFile
+    handler: src/handlers/importProductsFile.importProductsFile
     events:
-     - httpApi:
-        method: GET
-        path: /import
-    environment:
-      BucketName: ${env:BUCKET}
+      - httpApi:
+          method: GET
+          path: /import
   importFileParser:
-    handler: handlers/importFileParser.importFileParser
+    handler: src/handlers/importFileParser.importFileParser
     events:
       - s3:
-          bucket: import-products-csv
+          bucket: ${self:provider.environment.BUCKET_NAME}
           event: s3:ObjectCreated:*
           rules:
             - prefix: uploaded
             - suffix: .csv
           existing: true
-    environment:
-      BucketName: ${env:BUCKET}
-
-
-    
-
-
