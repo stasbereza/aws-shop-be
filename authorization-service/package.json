@@ -1,0 +1,15 @@
+{
+  "name": "authorization-service",
+  "version": "1.0.0",
+  "description": "Store app authorization-service",
+  "main": "src/handlers/basicAuthorizer.js",
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "deploy": "sls deploy"
+  },
+  "devDependencies": {
+    "serverless-dotenv-plugin": "^6.0.0"
+  }
+}
