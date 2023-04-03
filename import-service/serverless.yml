@@ -1,6 +1,8 @@
 service: import-service
 frameworkVersion: "3"
 useDotenv: true
+plugins:
+  - serverless-dotenv-plugin
 
 provider:
   name: aws
@@ -9,11 +11,17 @@ provider:
   region: eu-west-1
   httpApi:
     cors: true
+    authorizers:
+      basicAuthorizer:
+        type: request
+        functionArn: arn:aws:lambda:${self:provider.region}:${self:provider.environment.ACCOUNT_ID}:function:${self:provider.environment.AUTHORIZER_NAME}
   environment:
     REGION: ${self:provider.region}
+    ACCOUNT_ID: ${env:ACCOUNT_ID}
     BUCKET_NAME: ${env:BUCKET_NAME}
     QUEUE_NAME: ${env:QUEUE_NAME}
     SQS_URL: ${env:SQS_URL}
+    AUTHORIZER_NAME: ${env:AUTHORIZER_NAME}
   iam:
     role:
       statements:
@@ -28,7 +36,7 @@ provider:
             - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
         - Effect: Allow
           Action: "sqs:*"
-          Resource: "arn:aws:sqs:eu-west-1:425140362966:${self:provider.environment.QUEUE_NAME}"
+          Resource: "arn:aws:sqs:${self:provider.region}:${self:provider.environment.ACCOUNT_ID}:${self:provider.environment.QUEUE_NAME}"
 
 functions:
   importProductsFile:
@@ -37,6 +45,8 @@ functions:
       - httpApi:
           method: GET
           path: /import
+          authorizer:
+            name: basicAuthorizer
   importFileParser:
     handler: src/handlers/importFileParser.importFileParser
     events:
