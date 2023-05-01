@@ -8,7 +8,7 @@ export const getProductById = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(product),
+      body: JSON.stringify(product[0]),
     };
   } catch (error) {
     return {
